@@ -1,11 +1,17 @@
 import { NextRequest } from "next/server"
 import { prisma } from "@/lib/prisma"
+import { getExpiryStatus, getDaysUntilExpiry } from "@/lib/expiry"
+
+const statusPriority: Record<string, number> = {
+  expired: 0,
+  expiring_soon: 1,
+  active: 2,
+}
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
   const search = searchParams.get("search") || ""
   const category = searchParams.get("category") || ""
-  const status = searchParams.get("status") || ""
 
   const where: Record<string, unknown> = {}
 
@@ -25,7 +31,24 @@ export async function GET(request: NextRequest) {
     orderBy: { expiryDate: "asc" },
   })
 
-  return Response.json(records)
+  const recordsWithStatus = records.map((record) => {
+    const status = getExpiryStatus(record.expiryDate)
+    const daysUntilExpiry = getDaysUntilExpiry(record.expiryDate)
+    return {
+      ...record,
+      status,
+      daysUntilExpiry,
+    }
+  })
+
+  recordsWithStatus.sort((a, b) => {
+    const priorityA = statusPriority[a.status]
+    const priorityB = statusPriority[b.status]
+    if (priorityA !== priorityB) return priorityA - priorityB
+    return a.daysUntilExpiry - b.daysUntilExpiry
+  })
+
+  return Response.json(recordsWithStatus)
 }
 
 export async function POST(request: Request) {
