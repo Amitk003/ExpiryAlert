@@ -12,6 +12,7 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
   const search = searchParams.get("search") || ""
   const category = searchParams.get("category") || ""
+  const statusFilter = searchParams.get("status") || ""
 
   const where: Record<string, unknown> = {}
 
@@ -31,7 +32,7 @@ export async function GET(request: NextRequest) {
     orderBy: { expiryDate: "asc" },
   })
 
-  const recordsWithStatus = records.map((record) => {
+  let recordsWithStatus = records.map((record) => {
     const status = getExpiryStatus(record.expiryDate)
     const daysUntilExpiry = getDaysUntilExpiry(record.expiryDate)
     return {
@@ -40,6 +41,10 @@ export async function GET(request: NextRequest) {
       daysUntilExpiry,
     }
   })
+
+  if (statusFilter) {
+    recordsWithStatus = recordsWithStatus.filter((r) => r.status === statusFilter)
+  }
 
   recordsWithStatus.sort((a, b) => {
     const priorityA = statusPriority[a.status]
