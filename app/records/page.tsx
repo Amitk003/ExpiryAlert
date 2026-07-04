@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
+import Header from "@/components/Header"
 import { formatDate } from "@/lib/expiry"
 
 type RecordItem = {
@@ -167,16 +168,7 @@ export default function RecordsPage() {
 
   return (
     <div className="flex flex-col flex-1">
-      <header className="bg-white border-b border-gray-200 px-6 py-4">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <h1 className="text-xl font-bold tracking-tight">ExpiryAlert</h1>
-          <nav className="flex items-center gap-4 text-sm">
-            <Link href="/" className="text-gray-600 hover:text-gray-900">Dashboard</Link>
-            <Link href="/records" className="font-medium text-blue-600">Records</Link>
-          </nav>
-        </div>
-      </header>
-
+      <Header />
       <main className="flex-1 max-w-6xl mx-auto w-full px-6 py-8">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-semibold">Expiry Tracking</h2>

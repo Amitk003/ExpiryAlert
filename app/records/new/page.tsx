@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
+import Header from "@/components/Header"
 
 const categories = [
   "Vendor Contract",
@@ -54,16 +55,7 @@ export default function NewRecordPage() {
 
   return (
     <div className="flex flex-col flex-1">
-      <header className="bg-white border-b border-gray-200 px-6 py-4">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <h1 className="text-xl font-bold tracking-tight">ExpiryAlert</h1>
-          <nav className="flex items-center gap-4 text-sm">
-            <Link href="/" className="text-gray-600 hover:text-gray-900">Dashboard</Link>
-            <Link href="/records" className="font-medium text-blue-600">Records</Link>
-          </nav>
-        </div>
-      </header>
-
+      <Header />
       <main className="flex-1 max-w-2xl mx-auto w-full px-6 py-8">
         <div className="mb-6">
           <Link href="/records" className="text-sm text-blue-600 hover:text-blue-800">
